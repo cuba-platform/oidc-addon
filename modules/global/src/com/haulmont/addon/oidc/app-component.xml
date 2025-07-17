@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2008-2019 Haulmont.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+<app-component xmlns="http://schemas.haulmont.com/cuba/app-component.xsd"
+               dependsOn="com.haulmont.cuba">
+    <module blocks="*"
+            name="global">
+        <artifact appJar="true"
+                  name="oidc-addon-global"/>
+        <artifact classifier="db"
+                  configuration="dbscripts"
+                  ext="zip"
+                  name="oidc-addon-core"/>
+        <property name="cuba.persistenceConfig"
+                  value="+com/haulmont/addon/oidc/persistence.xml"/>
+        <property name="cuba.metadataConfig"
+                  value="+com/haulmont/addon/oidc/metadata.xml"/>
+        <property name="cuba.viewsConfig"
+                  value="+com/haulmont/addon/oidc/views.xml"/>
+        <property name="cuba.creditsConfig"
+                  value="+com/haulmont/addon/oidc/credits.xml"/>
+    </module>
+    <module blocks="core"
+            dependsOn="global"
+            name="core">
+        <artifact appJar="true"
+                  name="oidc-addon-core"/>
+        <property name="cuba.springContextConfig"
+                  value="+com/haulmont/addon/oidc/spring.xml"/>
+        <property name="cuba.mainMessagePack"
+                  value="+com.haulmont.addon.oidc.core"/>
+        <!--<artifact classifier="db"-->
+        <!--configuration="dbscripts"-->
+        <!--ext="zip"-->
+        <!--name="oidc-addon-core"/>-->
+        <artifact classifier="db"
+                  configuration="dbscripts"
+                  ext="zip"
+                  name="oidc-addon-core"/>
+    </module>
+    <module blocks="web"
+            dependsOn="global"
+            name="web">
+        <artifact appJar="true"
+                  name="oidc-addon-web"/>
+        <artifact classifier="web"
+                  configuration="webcontent"
+                  ext="zip"
+                  name="oidc-addon-web"/>
+        <property name="cuba.springContextConfig"
+                  value="+com/haulmont/addon/oidc/web-spring.xml"/>
+        <property name="cuba.dispatcherSpringContextConfig"
+                  value="+com/haulmont/addon/oidc/oidc-dispatcher-spring.xml"/>
+        <property name="cuba.windowConfig"
+                  value="+com/haulmont/addon/oidc/web-screens.xml"/>
+        <property name="cuba.menuConfig"
+                  value="+com/haulmont/addon/oidc/web-menu.xml"/>
+        <property name="cuba.permissionConfig"
+                  value="+com/haulmont/addon/oidc/web-permissions.xml"/>
+        <property name="cuba.mainMessagePack"
+                  value="+com.haulmont.addon.oidc.web"/>
+        <property name="oidc.springContextConfig"
+                  value="+com/haulmont/addon/oidc/oidc-dispatcher-spring.xml"/>
+    </module>
+</app-component>

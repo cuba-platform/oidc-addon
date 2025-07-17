@@ -1,0 +1,9 @@
+.gradle
+.studio
+
+.idea/*
+*.iml
+
+*build/*
+deploy/*
+out/*

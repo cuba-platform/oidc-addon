@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.16">
+<file name="C:\projects\oidc-addon\modules\global\src\com\haulmont\addon\oidc\config\OidcConfig.java">
+</file>
+<file name="C:\projects\oidc-addon\modules\global\src\com\haulmont\addon\oidc\service\OidcRegistrationService.java">
+</file>
+<file name="C:\projects\oidc-addon\modules\global\src\com\haulmont\addon\oidc\service\OidcService.java">
+<error line="95" column="24" severity="error" message="Name &apos;preferred_username&apos; must match pattern &apos;^[a-z][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.MemberNameCheck"/>
+<error line="100" column="77" severity="error" message="Name &apos;preferred_username&apos; must match pattern &apos;^[a-z][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ParameterNameCheck"/>
+</file>
+</checkstyle>
