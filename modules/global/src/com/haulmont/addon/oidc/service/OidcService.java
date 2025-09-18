@@ -2,6 +2,8 @@ package com.haulmont.addon.oidc.service;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.haulmont.cuba.security.entity.User;
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,6 +20,11 @@ public interface OidcService {
     OidcRefreshData getRefreshData(OidcToken oidcToken);
 
     OidcToken getOidcToken(String appUrl, String code);
+
+    User findUserByUsername(String username);
+
+    OidcAccessData validateAndParseToken(String token);
+
 
     enum OAuth2ResponseType {
         CODE("code"),

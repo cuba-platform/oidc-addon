@@ -4,7 +4,7 @@
        xmlns:security="http://www.springframework.org/schema/security">
 
     <!-- Define a base package for your controllers-->
-    <context:component-scan base-package="com.haulmont.addon.oidc.web.rest"/>
+    <!--<context:component-scan base-package="com.haulmont.addon.oidc.web.rest"/>-->
 
     <security:http pattern="/rest/api/**"
                    create-session="stateless"

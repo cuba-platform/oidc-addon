@@ -96,7 +96,10 @@ configure([globalModule, coreModule, webModule]) {
 
     dependencies {
         //compile 'org.springframework.security:spring-security-oauth2:2.5.1-RELEASE'
+        compile 'org.springframework.security:spring-security-core:5.5.8'
+        compile 'org.springframework.security:spring-security-web:5.5.8'
         compile('com.auth0:java-jwt:4.4.0')
+        compile("com.nimbusds:nimbus-jose-jwt:9.37.3")
         testCompile('junit:junit:4.13.2')
     }
 

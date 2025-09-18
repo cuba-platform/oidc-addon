@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<checkstyle version="8.16">
-<file name="C:\projects\oidc-addon\modules\core\src\com\haulmont\addon\oidc\service\OidcRegistrationServiceBean.java">
-</file>
-<file name="C:\projects\oidc-addon\modules\core\src\com\haulmont\addon\oidc\service\OidcServiceBean.java">
-</file>
-</checkstyle>

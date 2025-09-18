@@ -6,6 +6,8 @@ import com.haulmont.cuba.core.config.Source;
 import com.haulmont.cuba.core.config.SourceType;
 import com.haulmont.cuba.core.config.defaults.Default;
 
+import java.util.List;
+
 @Source(type = SourceType.APP)
 public interface OidcConfig extends Config {
 
@@ -28,4 +30,11 @@ public interface OidcConfig extends Config {
 
     @Property("oidc.baseUrl")
     String getBaseUrl();
+
+    @Property("oidc.refreshRoles")
+    String getRefreshRoles();
+
+
+    @Property("oidc.defaultRoles")
+    String getDefaultRoles();
 }

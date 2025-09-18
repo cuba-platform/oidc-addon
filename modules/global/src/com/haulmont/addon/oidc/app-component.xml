@@ -47,10 +47,10 @@
         <!--configuration="dbscripts"-->
         <!--ext="zip"-->
         <!--name="oidc-addon-core"/>-->
-        <artifact classifier="db"
+        <!--<artifact classifier="db"
                   configuration="dbscripts"
                   ext="zip"
-                  name="oidc-addon-core"/>
+                  name="oidc-addon-core"/>-->
     </module>
     <module blocks="web"
             dependsOn="global"

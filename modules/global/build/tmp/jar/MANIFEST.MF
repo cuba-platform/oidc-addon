@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-App-Component-Id: com.haulmont.addon.oidc
-App-Component-Version: 0.1-SNAPSHOT
-
