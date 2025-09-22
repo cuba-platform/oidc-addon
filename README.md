@@ -8,6 +8,13 @@ Build and install in local maven repo
 ./gradlew install -x checkstyleMain -x spotbugsMain
 ```
 
+You may need to specify the concrete JDK version for gradle to have a successful build. Add JAVA_HOME path to gradle.properties file:
+
+```
+org.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64
+```
+
+
 ## Manual addon install
 
 Select custom "Install addon manually" icon from CUBA Studio Addons dialog. Fill input with the full dependency artifact name:
