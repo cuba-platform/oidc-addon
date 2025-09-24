@@ -84,7 +84,7 @@ public class OidcRegistrationServiceBean implements OidcRegistrationService {
             }
         }
         OidcConfig config = configuration.getConfig(OidcConfig.class);
-        if (!config.getDefaultRoles().isEmpty()) {
+        if (config.getDefaultRoles()!= null && !config.getDefaultRoles().isEmpty()) {
             List<String> roleNames = Arrays.asList(config.getDefaultRoles().split(","))
                     .stream().map(r -> r.trim()).collect(Collectors.toList());
             for (String roleName : roleNames) {
