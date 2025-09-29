@@ -45,6 +45,7 @@ public class OidcServiceBean implements OidcService {
 
     private static final String OIDC_AUTH_ENDPOINT = "%s/realms/%s/protocol/openid-connect/auth?%s";
     private static final String OIDC_ACCESS_TOKEN_PATH = "%s/realms/%s/protocol/openid-connect/token";
+    private static final String OIDC_LOGOUT_PATH = "%s/realms/%s/protocol/openid-connect/logout";
 
     private static Gson gson;
 
@@ -73,9 +74,19 @@ public class OidcServiceBean implements OidcService {
 
         String params = getAuthParams(config.getOidcClientId(), webAppUrl);
         String baseUrl = config.getBaseUrl();
-        String keycloakRealm = config.getKeycloakRealm();
+        String realm = config.getKeycloakRealm();
 
-        return String.format(OIDC_AUTH_ENDPOINT, baseUrl, keycloakRealm, params);
+        return String.format(OIDC_AUTH_ENDPOINT, baseUrl, realm, params);
+    }
+
+    @Override
+    public String getLogoutUrl() {
+        OidcConfig config = configuration.getConfig(OidcConfig.class);
+
+        String baseUrl = config.getBaseUrl();
+        String realm = config.getKeycloakRealm();
+
+        return String.format(OIDC_LOGOUT_PATH, baseUrl, realm);
     }
 
     public User findUserByUsername(String username) {

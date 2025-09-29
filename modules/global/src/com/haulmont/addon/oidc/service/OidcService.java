@@ -13,6 +13,8 @@ public interface OidcService {
 
     String getLoginUrl(String appUrl, OAuth2ResponseType responseType);
 
+    String getLogoutUrl();
+
     void logout(String keycloakId);
 
     OidcAccessData getAccessData(OidcToken oidcToken);
@@ -44,6 +46,8 @@ public interface OidcService {
 
     class OidcToken implements Serializable {
 
+        @SerializedName("id_token")
+        private String idToken;
         @SerializedName("access_token")
         private String accessToken;
         @SerializedName("refresh_token")
@@ -54,6 +58,14 @@ public interface OidcService {
 
         public OidcToken(String accessToken) {
             this.accessToken = accessToken;
+        }
+
+        public String getIdToken() {
+            return idToken;
+        }
+
+        public void setIdToken(String idToken) {
+            this.idToken = idToken;
         }
 
         public String getAccessToken() {
