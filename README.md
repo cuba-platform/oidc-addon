@@ -15,6 +15,84 @@ org.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64
 ```
 
 
+## Install
+
+The addon is published to [GitHub Packages](https://github.com/cuba-platform/oidc-addon/packages).
+To install it, add the GitHub Packages repository to your CUBA project and then add the addon as an app component.
+
+### 1. Create a GitHub token
+
+GitHub Packages requires authentication even for public packages. Create a
+[personal access token (classic)](https://github.com/settings/tokens) with the `read:packages` scope.
+
+Put your credentials into `~/.gradle/gradle.properties` (user home, not the project, so they are not committed):
+
+```
+gpr.user=your-github-username
+gpr.key=ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
+### 2. Add the GitHub repository to your project
+
+CUBA resolves app components from the `buildscript` repositories, so the repository must be added
+to the `buildscript { repositories { ... } }` block of your project's root `build.gradle`
+(next to the existing `repo.cuba-platform.com` repository):
+
+```groovy
+buildscript {
+    ext.cubaVersion = '7.2.x'
+    repositories {
+        mavenLocal()
+        maven {
+            url 'https://repo.cuba-platform.com/content/groups/work'
+            credentials {
+                username(rootProject.hasProperty('repoUser') ? rootProject['repoUser'] : 'cuba')
+                password(rootProject.hasProperty('repoPass') ? rootProject['repoPass'] : 'cuba123')
+            }
+        }
+        // OIDC addon repository
+        maven {
+            url 'https://maven.pkg.github.com/cuba-platform/oidc-addon'
+            credentials {
+                username(rootProject.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR'))
+                password(rootProject.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN'))
+            }
+        }
+    }
+    dependencies {
+        classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
+    }
+}
+```
+
+Alternatively, add it in CUBA Studio: **CUBA > Project Properties > Repositories > +** and enter
+`https://maven.pkg.github.com/cuba-platform/oidc-addon` with your GitHub username and token.
+Note that Studio writes the credentials into `build.gradle` in plain text, so prefer the
+`gradle.properties` approach above if the project is under version control.
+
+### 3. Add the addon dependency
+
+Add the addon to the `dependencies` block of your root `build.gradle`:
+
+```groovy
+dependencies {
+    appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
+    appComponent('com.haulmont.addon.oidc:oidc-addon-global:0.1-SNAPSHOT')
+}
+```
+
+Then refresh the Gradle project (in CUBA Studio: **CUBA > Re-Import Gradle Project**).
+
+### Publishing (maintainers)
+
+Publish to GitHub Packages with a token that has the `write:packages` scope
+(credentials are taken from `gpr.user`/`gpr.key` Gradle properties or `GITHUB_ACTOR`/`GITHUB_TOKEN` env variables):
+
+```
+./gradlew uploadArchives -x checkstyleMain -x spotbugsMain
+```
+
+
 ## Manual addon install
 
 Select custom "Install addon manually" icon from CUBA Studio Addons dialog. Fill input with the full dependency artifact name:
