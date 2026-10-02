@@ -63,9 +63,8 @@ cuba {
         dir = "$project.rootDir/deploy/tomcat"
     }
     uploadRepository {
-        url = 'https://maven.pkg.github.com/cuba-platform/oidc-addon'
-        user = rootProject.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR')
-        password = rootProject.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN')
+        // local Maven repo, pushed to the gh-pages branch (served at https://cuba-platform.github.io/oidc-addon/maven)
+        url = file(rootProject.findProperty('oidcAddonGhPagesRepoDir') ?: "$rootDir/.gh-pages/maven").toURI().toString()
     }
     ide {
         vcs = 'Git'
@@ -236,3 +235,24 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
     }
 }
 restart.finalizedBy start
+
+// GitHub Pages has no directory listing, so generate index.html files for the published Maven repo
+task oidcAddonGhPagesIndex(description: 'Generates index.html listings in the gh-pages Maven repo') {
+    doLast {
+        def repoDir = file(rootProject.findProperty('oidcAddonGhPagesRepoDir') ?: "$rootDir/.gh-pages/maven")
+        def dirs = [repoDir]
+        repoDir.eachDirRecurse { dirs << it }
+        dirs.each { dir ->
+            def title = 'maven/' + repoDir.toURI().relativize(dir.toURI()).path
+            def items = dir.listFiles().findAll { it.name != 'index.html' }.sort { it.name }.collect {
+                def name = it.isDirectory() ? "${it.name}/" : it.name
+                "<li><a href=\"$name\">$name</a></li>"
+            }
+            if (dir != repoDir) items.add(0, '<li><a href="../">../</a></li>')
+            new File(dir, 'index.html').text = "<!doctype html><meta charset=\"utf-8\"><title>$title</title><h1>$title</h1><ul>\n${items.join('\n')}\n</ul>\n"
+        }
+    }
+}
+subprojects {
+    tasks.matching { it.name == 'uploadArchives' }.all { finalizedBy rootProject.tasks.oidcAddonGhPagesIndex }
+}

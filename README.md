@@ -17,22 +17,13 @@ org.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64
 
 ## Install
 
-The addon is published to [GitHub Packages](https://github.com/cuba-platform/oidc-addon/packages).
-To install it, add the GitHub Packages repository to your CUBA project and then add the addon as an app component.
-
-### 1. Create a GitHub token
-
-GitHub Packages requires authentication even for public packages. Create a
-[personal access token (classic)](https://github.com/settings/tokens) with the `read:packages` scope.
-
-Put your credentials into `~/.gradle/gradle.properties` (user home, not the project, so they are not committed):
+The addon is published to a public Maven repository hosted on GitHub Pages (no authentication required):
 
 ```
-gpr.user=your-github-username
-gpr.key=ghp_xxxxxxxxxxxxxxxxxxxx
+https://cuba-platform.github.io/oidc-addon/maven
 ```
 
-### 2. Add the GitHub repository to your project
+### 1. Add the repository to your project
 
 CUBA resolves app components from the `buildscript` repositories, so the repository must be added
 to the `buildscript { repositories { ... } }` block of your project's root `build.gradle`
@@ -52,11 +43,7 @@ buildscript {
         }
         // OIDC addon repository
         maven {
-            url 'https://maven.pkg.github.com/cuba-platform/oidc-addon'
-            credentials {
-                username(rootProject.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR'))
-                password(rootProject.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN'))
-            }
+            url 'https://cuba-platform.github.io/oidc-addon/maven'
         }
     }
     dependencies {
@@ -66,11 +53,9 @@ buildscript {
 ```
 
 Alternatively, add it in CUBA Studio: **CUBA > Project Properties > Repositories > +** and enter
-`https://maven.pkg.github.com/cuba-platform/oidc-addon` with your GitHub username and token.
-Note that Studio writes the credentials into `build.gradle` in plain text, so prefer the
-`gradle.properties` approach above if the project is under version control.
+`https://cuba-platform.github.io/oidc-addon/maven` (leave user and password empty).
 
-### 3. Add the addon dependency
+### 2. Add the addon dependency
 
 Add the addon to the `dependencies` block of your root `build.gradle`:
 
@@ -85,12 +70,36 @@ Then refresh the Gradle project (in CUBA Studio: **CUBA > Re-Import Gradle Proje
 
 ### Publishing (maintainers)
 
-Publish to GitHub Packages with a token that has the `write:packages` scope
-(credentials are taken from `gpr.user`/`gpr.key` Gradle properties or `GITHUB_ACTOR`/`GITHUB_TOKEN` env variables):
+The Maven repository lives in the `maven/` folder of the `gh-pages` branch. Check out that branch
+as a worktree into `.gh-pages` (ignored by git) once:
 
 ```
-./gradlew uploadArchives -x checkstyleMain -x spotbugsMain
+git fetch origin gh-pages
+git worktree add .gh-pages gh-pages
 ```
+
+Build and deploy artifacts into `.gh-pages/maven`, then commit and push the branch:
+
+```
+cd .gh-pages && git pull && cd ..
+./gradlew uploadArchives -x checkstyleMain -x spotbugsMain
+cd .gh-pages
+git add -A
+git commit -m "publish oidc-addon <version>"
+git push origin gh-pages
+```
+
+`uploadArchives` also runs `oidcAddonGhPagesIndex`, which regenerates `index.html` directory listings
+in the Maven repo (GitHub Pages does not list directories).
+
+If the `gh-pages` worktree is located elsewhere, pass its `maven` folder explicitly:
+
+```
+./gradlew uploadArchives -x checkstyleMain -x spotbugsMain -PoidcAddonGhPagesRepoDir=/path/to/gh-pages/maven
+```
+
+GitHub Pages must be enabled for the repository: **Settings > Pages > Build and deployment >
+Deploy from a branch**, branch `gh-pages`, folder `/ (root)`.
 
 
 ## Manual addon install
